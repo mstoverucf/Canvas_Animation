@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+<head>
+<title>Project 3: Canvas Animation</title>
+
+<script>
+var canvas,
+	ctxt,
+	carsArray,
+	starsArray,
+	moonArray,
+	cloudsForeArray,
+	cloudsBackArray,
+	timer;
+
+// Create arrays of objects for animation.
+//-----------------------------------------------------------------
+function makeParticles() {
+	var i, x;
+	
+	carsArray = [];
+	for (var i = 0; i < 50; i++) {
+		carsArray.push(new car());
+	}
+	
+	starsArray = [];
+	for (var i = 0; i < 100; i++) {
+		starsArray.push(new star());
+	}
+	
+	moonArray = [];
+	for (var i = 0; i < 1; i++) {
+		moonArray.push(new moon());
+	}
+	
+	cloudsForeArray = [];
+	for (var i = 0; i < 30; i++) {
+		cloudsForeArray.push(new cloudFore());
+	}
+	
+	cloudsBackArray = [];
+	for (var i = 0; i < 30; i++) {
+		cloudsBackArray.push(new cloudBack());
+	}
+}
+
+//-----------------------------------------------------------------
+function degreesToRadians(degrees) {
+	// Converts from degrees to radians and returns.
+	return (degrees * Math.PI)/180;
+}
+
+//-----------------------------------------------------------------
+function cloudFore() {
+	this.x = Math.random() * canvas.width;
+	this.y = 70 + Math.random() * 40;
+	this.vx = (4 + Math.random() * 2) / 10;
+	this.color = "rgb(95, 95, 95)";
+}
+
+//-----------------------------------------------------------------
+function cloudBack() {
+	this.x = Math.random() * canvas.width;
+	this.y = 60 + Math.random() * 50;
+	this.vx = (8 + Math.random() * 3) / 10;
+	this.color = "rgb(80, 80, 80)";
+}
+
+//-----------------------------------------------------------------
+function car() {
+	// Random X location on the canvas.
+	this.x = Math.random() * canvas.width;
+	// Random Y location on the canvas near the bottom.
+	this.y = (canvas.height - 15) + Math.random() * 12;
+	// Random velocity where + is right motion and - is left motion.
+	this.vx = Math.random() * 10 - 5;
+	// Random values of red to simulate tail lights.
+	var colors = ["rgb(250, 20, 10)", "rgb(230, 30, 30)", "rgb(210, 30, 50)", "rgb(240, 10, 10)", "rgb(255, 40, 30)", "rgb(254, 30, 30)"];
+	this.color = colors[Math.floor(Math.random() * colors.length)];
+	// Size of the circles.
+	this.radius = 3;
+}
+
+//-----------------------------------------------------------------
+function star() {
+	this.x = Math.random() * canvas.width;
+	this.y = Math.random() * canvas.height;
+	this.color = "white";
+}
+
+//-----------------------------------------------------------------
+function moon() {
+	this.x = 75; //canvas.width * 0.075;
+	this.y = 65; //canvas.height * 0.105;
+	this.vx = 0.3;
+	this.color = "rgb(235, 235, 235)";
+	this.radius = canvas.height * 0.15;
+}
+
+//-----------------------------------------------------------------
+function moveStuff() {
+	ctxt.globalCompositeOperation = "source-over";
+	ctxt.fillStyle = "rgba(0, 0, 0, 0.1)";
+	ctxt.fillRect(0, 0, canvas.width, canvas.height);
+	
+	var i;
+	
+	// Stars
+	for (i = 0; i < starsArray.length; i++) {
+		var s = starsArray[i];
+		
+		ctxt.beginPath();
+		ctxt.moveTo(s.x, s.y);
+		ctxt.lineTo(s.x + 5, s.y);
+		ctxt.lineTo(s.x - 3, s.y + 5);
+		ctxt.lineTo(s.x, s.y - 4);
+		ctxt.lineTo(s.x + 3, s.y + 5);
+		ctxt.lineTo(s.x - 5, s.y);
+		ctxt.closePath();
+		ctxt.fillStyle = s.color;
+		ctxt.fill();
+	}
+	
+	// Background clouds
+	for (i = 0; i < cloudsBackArray.length; i++) {
+		var cb = cloudsBackArray[i];
+		
+		ctxt.beginPath();
+		ctxt.moveTo(cb.x, cb.y);
+		ctxt.bezierCurveTo(cb.x + 10, cb.y - 15, cb.x + 30, cb.y - 15, cb.x + 38, cb.y - 5);
+		ctxt.bezierCurveTo(cb.x + 45, cb.y - 14, cb.x + 67, cb.y - 11, cb.x + 68, cb.y + 5);
+		ctxt.bezierCurveTo(cb.x + 83, cb.y + 8, cb.x + 85, cb.y + 24, cb.x + 69, cb.y + 31);
+		ctxt.bezierCurveTo(cb.x + 73, cb.y + 45, cb.x + 53, cb.y + 51, cb.x + 40, cb.y + 43);
+		ctxt.bezierCurveTo(cb.x + 33, cb.y + 55, cb.x + 8, cb.y + 53, cb.x + 4, cb.y + 41);
+		ctxt.bezierCurveTo(cb.x - 11, cb.y + 46, cb.x - 15, cb.y + 28, cb.x - 7, cb.y + 21);
+		ctxt.bezierCurveTo(cb.x - 18, cb.y + 14, cb.x - 15, cb.y - 2, cb.x, cb.y);
+		ctxt.closePath();
+		ctxt.shadowBlur = 20;
+		ctxt.shadowColor = "black";
+		ctxt.fillStyle = cb.color;
+		ctxt.fill();
+		
+		cb.x += cb.vx;
+		
+		if(cb.x < -90) cb.x = canvas.width + 90;
+		if(cb.x > canvas.width + 90) cb.x = -90;
+	}
+	
+	// Moon
+	for (i = 0; i < moonArray.length; i++) {
+		var m = moonArray[i];
+		
+		ctxt.beginPath();
+		ctxt.arc(m.x, m.y, m.radius, 0, degreesToRadians(360), true);
+		ctxt.shadowBlur = 20;
+		ctxt.shadowColor = "black";
+		ctxt.fillStyle = m.color;
+		ctxt.fill();
+		
+		m.x += m.vx;
+		
+		if(m.x < -90) m.x = canvas.width + 90;
+		if(m.x > canvas.width + 90) m.x = -90;
+	}
+	
+	// Background buildings
+	ctxt.fillStyle = "rgb(60, 60, 60)";
+	ctxt.beginPath();
+	ctxt.moveTo(0, 358);
+	ctxt.lineTo(116, 360);
+	ctxt.lineTo(116, 444);
+	ctxt.lineTo(196, 444);
+	ctxt.lineTo(196, 115);
+	ctxt.lineTo(305, 114);
+	ctxt.lineTo(305, 366);
+	ctxt.lineTo(434, 345);
+	ctxt.lineTo(434, 392);
+	ctxt.lineTo(491, 392);
+	ctxt.lineTo(491, 319);
+	ctxt.lineTo(560, 319);
+	ctxt.lineTo(560, 264);
+	ctxt.lineTo(695, 264);
+	ctxt.lineTo(695, 454);
+	ctxt.lineTo(716, 454);
+	ctxt.lineTo(716, 136);
+	ctxt.lineTo(847, 40);
+	ctxt.lineTo(847, 261);
+	ctxt.lineTo(892, 261);
+	ctxt.lineTo(892, 246);
+	ctxt.lineTo(1003, 246);
+	ctxt.lineTo(1003, 297);
+	ctxt.lineTo(1024, 297);
+	ctxt.lineTo(1024, 600);
+	ctxt.lineTo(0, 600);
+	ctxt.closePath();
+	ctxt.shadowBlur = 20;
+	ctxt.shadowColor = "black";
+	ctxt.fill();
+	
+	// Midground buildings
+	ctxt.fillStyle = "rgb(45, 45, 45)";
+	ctxt.beginPath();
+	ctxt.moveTo(0, 318);
+	ctxt.lineTo(80, 318);
+	ctxt.lineTo(80, 489);
+	ctxt.lineTo(178, 489);
+	ctxt.lineTo(178, 426);
+	ctxt.lineTo(258, 380);
+	ctxt.lineTo(326, 380);
+	ctxt.lineTo(353, 398);
+	ctxt.lineTo(385, 398);
+	ctxt.lineTo(385, 418);
+	ctxt.lineTo(404, 418);
+	ctxt.lineTo(404, 440);
+	ctxt.lineTo(467, 440);
+	ctxt.lineTo(568, 339);
+	ctxt.lineTo(568, 144);
+	ctxt.lineTo(650, 144);
+	ctxt.lineTo(650, 332);
+	ctxt.lineTo(703, 390);
+	ctxt.lineTo(703, 473);
+	ctxt.lineTo(820, 473);
+	ctxt.lineTo(820, 382);
+	ctxt.lineTo(939, 382);
+	ctxt.lineTo(939, 411);
+	ctxt.lineTo(990, 411);
+	ctxt.lineTo(990, 374);
+	ctxt.lineTo(1024, 374);
+	ctxt.lineTo(1024, 600);
+	ctxt.lineTo(0, 600);
+	ctxt.closePath();
+	ctxt.shadowBlur = 20;
+	ctxt.shadowColor = "black";
+	ctxt.fill();
+	
+	// Foreground buildings
+	ctxt.fillStyle = "rgb(30, 30, 30)";
+	ctxt.beginPath();
+	ctxt.moveTo(0, 508);
+	ctxt.lineTo(50, 508);
+	ctxt.lineTo(106, 473);
+	ctxt.lineTo(106, 513);
+	ctxt.lineTo(159, 473);
+	ctxt.lineTo(159, 510);
+	ctxt.lineTo(228, 510);
+	ctxt.lineTo(228, 366);
+	ctxt.lineTo(318, 421);
+	ctxt.lineTo(318, 471);
+	ctxt.lineTo(392, 471);
+	ctxt.lineTo(392, 525);
+	ctxt.lineTo(472, 525);
+	ctxt.lineTo(472, 453);
+	ctxt.lineTo(568, 379);
+	ctxt.lineTo(568, 399);
+	ctxt.lineTo(637, 399);
+	ctxt.lineTo(637, 436);
+	ctxt.lineTo(733, 436);
+	ctxt.lineTo(733, 413);
+	ctxt.lineTo(855, 418);
+	ctxt.lineTo(855, 524);
+	ctxt.lineTo(877, 524);
+	ctxt.lineTo(877, 490);
+	ctxt.lineTo(897, 490);
+	ctxt.lineTo(897, 451);
+	ctxt.lineTo(1024, 451);
+	ctxt.lineTo(1024, 600);
+	ctxt.lineTo(0, 600)
+	ctxt.closePath();
+	ctxt.shadowBlur = 20;
+	ctxt.shadowColor = "black";
+	ctxt.fill();
+	
+	// Foreground clouds
+	for (i = 0; i < cloudsForeArray.length; i++) {
+		var cf = cloudsForeArray[i];
+		
+		ctxt.beginPath();
+		ctxt.moveTo(cf.x, cf.y);
+		ctxt.bezierCurveTo(cf.x + 10, cf.y - 15, cf.x + 30, cf.y - 15, cf.x + 38, cf.y - 5);
+		ctxt.bezierCurveTo(cf.x + 45, cf.y - 14, cf.x + 67, cf.y - 11, cf.x + 68, cf.y + 5);
+		ctxt.bezierCurveTo(cf.x + 83, cf.y + 8, cf.x + 85, cf.y + 24, cf.x + 69, cf.y + 31);
+		ctxt.bezierCurveTo(cf.x + 73, cf.y + 45, cf.x + 53, cf.y + 51, cf.x + 40, cf.y + 43);
+		ctxt.bezierCurveTo(cf.x + 33, cf.y + 55, cf.x + 8, cf.y + 53, cf.x + 4, cf.y + 41);
+		ctxt.bezierCurveTo(cf.x - 11, cf.y + 46, cf.x - 15, cf.y + 28, cf.x - 7, cf.y + 21);
+		ctxt.bezierCurveTo(cf.x - 18, cf.y + 14, cf.x - 15, cf.y - 2, cf.x, cf.y);
+		ctxt.closePath();
+		ctxt.shadowBlur = 20;
+		ctxt.shadowColor = "black";
+		ctxt.fillStyle = cf.color;
+		ctxt.fill();
+		
+		cf.x += cf.vx;
+		
+		if (cf.x < -90) cf.x = canvas.width + 90;
+		if (cf.x > canvas.width + 90) cf.x = -90;
+	}
+	
+	ctxt.globalCompositeOperation = "lighter";
+	
+	// Tail lights
+	for (var i = 0; i < carsArray.length; i++) {
+		var c = carsArray[i];
+		
+		ctxt.beginPath();
+		ctxt.arc(c.x, c.y, c.radius, 0, degreesToRadians(360), true);
+		ctxt.fillStyle = c.color;
+		ctxt.fill();
+		
+		c.x += c.vx;
+		
+		if(c.x < -50) c.x = canvas.width + 50;
+		if(c.x > canvas.width + 50) c.x = -50;
+	}
+	
+	ctxt.font = "24pt Calibri";
+	ctxt.fillStyle = "white";
+	ctxt.fillText("The sun", canvas.width * 0.695, canvas.height * 0.9);
+	ctxt.strokeStyle = "white";
+	ctxt.lineWidth = 0.2;
+	ctxt.strokeText("sleeps", canvas.width * 0.8, canvas.height * 0.9);
+}
+
+//-----------------------------------------------------------------
+window.onload = function() {
+ 	canvas = document.getElementById('canvas');
+	ctxt = canvas.getContext('2d');
+	makeParticles();
+	timer = setInterval(moveStuff, 100);
+}
+</script>
+</head>
+
+<body>
+	<canvas id="canvas" width="1024" height="600"></canvas>
+</body>
+</html>

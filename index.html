@@ -1,7 +1,9 @@
 <!doctype html>
 <html>
 <head>
-<title>Project 3: Canvas Animation</title>
+<title>Final Project</title>
+
+<link type = "text/css" rel = "stylesheet" href = "stylesheet.css">
 
 <script>
 var canvas,
@@ -11,7 +13,8 @@ var canvas,
 	moonArray,
 	cloudsForeArray,
 	cloudsBackArray,
-	timer;
+	timer,
+	keepything = 0;
 
 // Create arrays of objects for animation.
 //-----------------------------------------------------------------
@@ -55,7 +58,12 @@ function cloudFore() {
 	this.x = Math.random() * canvas.width;
 	this.y = 70 + Math.random() * 40;
 	this.vx = (4 + Math.random() * 2) / 10;
-	this.color = "rgb(95, 95, 95)";
+	if (keepything == 0)
+		this.color = "rgba(95, 95, 95, .7)";
+	else if (keepything == 1)
+		this.color = "rgba(255, 255, 255, .7)";
+	else if (keepything == 2)
+		this.color = "rgba(255, 255, 255, .7)";
 }
 
 //-----------------------------------------------------------------
@@ -63,7 +71,12 @@ function cloudBack() {
 	this.x = Math.random() * canvas.width;
 	this.y = 60 + Math.random() * 50;
 	this.vx = (8 + Math.random() * 3) / 10;
-	this.color = "rgb(80, 80, 80)";
+	if (keepything == 0)
+		this.color = "rgba(80, 80, 80, .7)";
+	else if (keepything == 1)
+		this.color = "rgba(240, 240, 240, .7)";
+	else if (keepything == 2)
+		this.color = "rgba(240, 240, 240, .7)";
 }
 
 //-----------------------------------------------------------------
@@ -85,7 +98,12 @@ function car() {
 function star() {
 	this.x = Math.random() * canvas.width;
 	this.y = Math.random() * canvas.height;
-	this.color = "white";
+	if (keepything == 0)
+		this.color = "white";
+	else if (keepything == 1)
+		this.color = "rgb(180, 230, 255)";
+	else if (keepything == 2)
+		this.color = "rgb(180, 230, 255)";
 }
 
 //-----------------------------------------------------------------
@@ -93,14 +111,25 @@ function moon() {
 	this.x = 75; //canvas.width * 0.075;
 	this.y = 65; //canvas.height * 0.105;
 	this.vx = 0.3;
-	this.color = "rgb(235, 235, 235)";
+	if (keepything == 0)
+		this.color = "rgb(235, 235, 235)";
+	else if (keepything == 1)
+		this.color = "rgb(240, 240, 100)";
+	else if (keepything == 2)
+		this.color = "rgb(240, 240, 100)";
+	//this.color = "rgb(235, 235, 235)";
 	this.radius = canvas.height * 0.15;
 }
 
 //-----------------------------------------------------------------
 function moveStuff() {
 	ctxt.globalCompositeOperation = "source-over";
-	ctxt.fillStyle = "rgba(0, 0, 0, 0.1)";
+	if (keepything == 0)
+		ctxt.fillStyle = "rgba(0, 0, 0, 0.1)";
+	else if (keepything == 1)
+		ctxt.fillStyle = "rgba(180, 230, 255, 0.1)";
+	else if (keepything == 2)
+		ctxt.fillStyle = "rgba(180, 230, 255, 0.1)";
 	ctxt.fillRect(0, 0, canvas.width, canvas.height);
 	
 	var i;
@@ -135,8 +164,10 @@ function moveStuff() {
 		ctxt.bezierCurveTo(cb.x - 11, cb.y + 46, cb.x - 15, cb.y + 28, cb.x - 7, cb.y + 21);
 		ctxt.bezierCurveTo(cb.x - 18, cb.y + 14, cb.x - 15, cb.y - 2, cb.x, cb.y);
 		ctxt.closePath();
-		ctxt.shadowBlur = 20;
+		ctxt.shadowBlur = 3;
 		ctxt.shadowColor = "black";
+		ctxt.shadowOffsetX = 3;
+		ctxt.shadowOffsetY = 3;
 		ctxt.fillStyle = cb.color;
 		ctxt.fill();
 		
@@ -152,8 +183,10 @@ function moveStuff() {
 		
 		ctxt.beginPath();
 		ctxt.arc(m.x, m.y, m.radius, 0, degreesToRadians(360), true);
-		ctxt.shadowBlur = 20;
-		ctxt.shadowColor = "black";
+		ctxt.shadowBlur = 7;
+		ctxt.shadowColor = "rgba(180, 180, 255, 1)";
+		ctxt.shadowOffsetX = 0;
+		ctxt.shadowOffsetY = 0;
 		ctxt.fillStyle = m.color;
 		ctxt.fill();
 		
@@ -164,7 +197,12 @@ function moveStuff() {
 	}
 	
 	// Background buildings
-	ctxt.fillStyle = "rgb(60, 60, 60)";
+	if (keepything == 0)
+		ctxt.fillStyle = "rgb(60, 60, 60)";
+	else if (keepything == 1)
+		ctxt.fillStyle = "rgb(100, 100, 100)";
+	else if (keepything == 2)
+		ctxt.fillStyle = "rgb(100, 100, 100)";
 	ctxt.beginPath();
 	ctxt.moveTo(0, 358);
 	ctxt.lineTo(116, 360);
@@ -193,12 +231,19 @@ function moveStuff() {
 	ctxt.lineTo(1024, 600);
 	ctxt.lineTo(0, 600);
 	ctxt.closePath();
-	ctxt.shadowBlur = 20;
+	ctxt.shadowBlur = 3;
 	ctxt.shadowColor = "black";
+	ctxt.shadowOffsetX = 3;
+	ctxt.shadowOffsetY = 3;
 	ctxt.fill();
 	
 	// Midground buildings
-	ctxt.fillStyle = "rgb(45, 45, 45)";
+	if (keepything == 0)
+		ctxt.fillStyle = "rgb(45, 45, 45)";
+	else if (keepything == 1)
+		ctxt.fillStyle = "rgb(85, 85, 85)";
+	else if (keepything == 2)
+		ctxt.fillStyle = "rgb(85, 85, 85)";
 	ctxt.beginPath();
 	ctxt.moveTo(0, 318);
 	ctxt.lineTo(80, 318);
@@ -229,12 +274,19 @@ function moveStuff() {
 	ctxt.lineTo(1024, 600);
 	ctxt.lineTo(0, 600);
 	ctxt.closePath();
-	ctxt.shadowBlur = 20;
+	ctxt.shadowBlur = 3;
 	ctxt.shadowColor = "black";
+	ctxt.shadowOffsetX = 3;
+	ctxt.shadowOffsetY = 3;
 	ctxt.fill();
 	
 	// Foreground buildings
-	ctxt.fillStyle = "rgb(30, 30, 30)";
+	if (keepything == 0)
+		ctxt.fillStyle = "rgb(30, 30, 30)";
+	else if (keepything == 1)
+		ctxt.fillStyle = "rgb(70, 70, 70)";
+	else if (keepything == 2)
+		ctxt.fillStyle = "rgb(70, 70, 70)";
 	ctxt.beginPath();
 	ctxt.moveTo(0, 508);
 	ctxt.lineTo(50, 508);
@@ -266,8 +318,10 @@ function moveStuff() {
 	ctxt.lineTo(1024, 600);
 	ctxt.lineTo(0, 600)
 	ctxt.closePath();
-	ctxt.shadowBlur = 20;
+	ctxt.shadowBlur = 3;
 	ctxt.shadowColor = "black";
+	ctxt.shadowOffsetX = 3;
+	ctxt.shadowOffsetY = 3;
 	ctxt.fill();
 	
 	// Foreground clouds
@@ -284,8 +338,10 @@ function moveStuff() {
 		ctxt.bezierCurveTo(cf.x - 11, cf.y + 46, cf.x - 15, cf.y + 28, cf.x - 7, cf.y + 21);
 		ctxt.bezierCurveTo(cf.x - 18, cf.y + 14, cf.x - 15, cf.y - 2, cf.x, cf.y);
 		ctxt.closePath();
-		ctxt.shadowBlur = 20;
+		ctxt.shadowBlur = 3;
 		ctxt.shadowColor = "black";
+		ctxt.shadowOffsetX = 3;
+	ctxt.shadowOffsetY = 3;
 		ctxt.fillStyle = cf.color;
 		ctxt.fill();
 		
@@ -303,34 +359,69 @@ function moveStuff() {
 		
 		ctxt.beginPath();
 		ctxt.arc(c.x, c.y, c.radius, 0, degreesToRadians(360), true);
+		ctxt.shadowBlur = 5;
+		ctxt.shadowColor = "rgba(255, 150, 150, 1)";
+		ctxt.shadowOffsetX = 0;
+		ctxt.shadowOffsetY = 0;
 		ctxt.fillStyle = c.color;
 		ctxt.fill();
 		
 		c.x += c.vx;
 		
 		if(c.x < -50) c.x = canvas.width + 50;
-		if(c.x > canvas.width + 50) c.x = -50;
+		if(c.x > canvas.width + 50) c.x = -50; 
 	}
 	
+	if (keepything == 0)
+		ctxt.shadowColor = "black";
+	else if (keepything == 1)
+		ctxt.shadowColor = "rgb(180, 230, 255)";
+	else if (keepything == 2)
+		ctxt.shadowColor = "rgb(180, 230, 255)";
+
 	ctxt.font = "24pt Calibri";
 	ctxt.fillStyle = "white";
 	ctxt.fillText("The sun", canvas.width * 0.695, canvas.height * 0.9);
 	ctxt.strokeStyle = "white";
 	ctxt.lineWidth = 0.2;
-	ctxt.strokeText("sleeps", canvas.width * 0.8, canvas.height * 0.9);
+
+	if (keepything == 0)
+		ctxt.strokeText("sleeps", canvas.width * 0.8, canvas.height * 0.9);
+	else if (keepything == 1)
+		ctxt.strokeText("shines", canvas.width * 0.8, canvas.height * 0.9);
+	else if (keepything == 2)
+		ctxt.strokeText("has poo brain", canvas.width * 0.8, canvas.height * 0.9);
 }
 
 //-----------------------------------------------------------------
 window.onload = function() {
- 	canvas = document.getElementById('canvas');
-	ctxt = canvas.getContext('2d');
+ 	canvas = document.getElementById("canvas");
+	ctxt = canvas.getContext("2d");
 	makeParticles();
 	timer = setInterval(moveStuff, 100);
-}
+	//canvas.onclick
+};
 </script>
 </head>
 
 <body>
-	<canvas id="canvas" width="1024" height="600"></canvas>
+	<div class = "header">
+		<center><h1>Some fancy logo or something</h1></center>
+	</div>
+	
+	<div class = "navbar">
+		<p>Link</p>
+		<p>Link</p>
+		<p>Link</p>
+		<p>Link</p>
+		<p>Link</p>
+		<p>Link</p>
+	</div>
+	
+	<div class = "main">
+		<h1>Interactive Canvas Animation</h1>
+		<canvas id="canvas" width="1024" height="600" style = "border:1px solid"></canvas>
+		<p>SPACE to cycle day/night&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B for whacked out&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M-CLICK for fireworks</p>
+	</div>
 </body>
 </html>

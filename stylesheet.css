@@ -1,0 +1,47 @@
+body {
+	background-color: #2E2E2E;
+}
+
+.header {
+	background-color: #585858;
+	margin: 10px;
+	height: 100px;
+	width: 1225px;
+	border-radius: 5px;
+}
+
+.navbar {
+	background-color: #585858;
+	font-size: 105%;
+	padding: 15px;
+	width: 126px;
+	float: left;
+	border-radius: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+}
+
+.main {
+	background-color: #585858;
+	padding: 15px;
+	float: left;
+	border-radius: 5px;
+	margin-left: 00px;
+	margin-right: 10px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	width: 1030px;
+}
+
+h1 {
+	font-size: 150%;
+	font-family: "Verdana";
+	color: #CEB41D;
+}
+
+p {
+	font-family: "Verdana";
+	color: #CEB41D;
+}
